@@ -56,7 +56,7 @@ class SaleOrder(models.Model):
             tax_reward_map.setdefault(reward_line.tax_id, self.env["sale.order.line"])
             tax_reward_map[reward_line.tax_id] |= reward_line
         for tax, tax_reward_lines in tax_reward_map.items():
-            lines.filtered(lambda x: x.tax_id == tax).write(
+            lines.filtered(lambda x, tax=tax: x.tax_id == tax).write(
                 {"reward_line_ids": [(4, rl.id) for rl in tax_reward_lines]}
             )
 
@@ -99,7 +99,7 @@ class SaleOrder(models.Model):
         """Link the lines that generated reward lines to those lines"""
         for program in programs:
             reward_lines = self.order_line.filtered(
-                lambda x: x.loyalty_program_id == program
+                lambda x, program=program: x.loyalty_program_id == program
             )
             self.order_line._filter_related_program_lines(program).write(
                 {"reward_generated_line_ids": [(4, rl.id) for rl in reward_lines]}
