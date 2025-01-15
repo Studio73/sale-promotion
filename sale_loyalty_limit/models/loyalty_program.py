@@ -30,7 +30,7 @@ class LoyaltySalesmenLimit(models.Model):
         )
         for program in programs:
             salesmen_limits = self.filtered(
-                lambda x: x._origin in program["salesmen_limit_ids"]
+                lambda x, program=program: x._origin in program["salesmen_limit_ids"]
             )
             for salesman_limit in salesmen_limits:
                 salesman_limit.times_used = len(
